@@ -29,10 +29,11 @@ while True:
 
     body = b""
     timeStamp = ""
+    FORBIDDEN = ["secret.html"]
 
     if not os.path.exists(filename):
         responseCode = "404 Not Found"
-    elif not os.access(filename, os.R_OK): #client doesnt have read access
+    elif not os.access(filename, os.R_OK) or filename in FORBIDDEN: #client doesnt have read access
         responseCode = "403 Forbidden"
     elif version != "HTTP/1.1":
         responseCode = "505 HTTP Version Not Supported"
