@@ -33,7 +33,7 @@ while True:
 
     if not os.path.exists(filename):
         responseCode = "404 Not Found"
-    elif not os.access(filename, os.R_OK) or filename in FORBIDDEN: #client doesnt have read access
+    elif filename in FORBIDDEN: 
         responseCode = "403 Forbidden"
     elif version != "HTTP/1.1":
         responseCode = "505 HTTP Version Not Supported"
@@ -53,11 +53,24 @@ while True:
             responseCode = "200 OK"
 
         
-
-    header = "HTTP/1.1 " + responseCode + "\r\nLast-Modified: " + timeStamp + "\r\nContent-Type: text/html\r\n\r\n"
-
     if responseCode == "200 OK":
         body = open(filename, 'rb').read()
+        lastModifiedHeader = "Last-Modified: " + timeStamp + "\r\n"
+    else:
+        lastModifiedHeader = ''
+
+    currentDate = datetime.now(timezone.utc).strftime(TIME_FORMAT)
+
+    header = (
+        f"HTTP/1.1 {responseCode}\r\n"
+        f"Date: {currentDate}\r\n"
+        f"Server: CMPT371-Team17-WebServer\r\n"
+        f"{lastModifiedHeader}"
+        f"Content-Length: {len(body)}\r\n"
+        f"Content-Type: text/html\r\n"
+        f"Connection: close\r\n"
+        f"\r\n"
+    )
 
     clientSocket.send(header.encode())
     clientSocket.send(body)
