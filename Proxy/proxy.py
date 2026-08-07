@@ -40,15 +40,11 @@ while True:
             (key, value) = line.split(": ", 1)
             headerFields[key] = value
 
-    host_port, path = url.split("/", 1) #host_port = localhost:80, path = test.html
+    host_port, path = url.split("/", 1) #host_port = localhost:8080, path = test.html
     
-    if ":" in host_port: # host_port is localhost:PORTNUM is port is not 80
-        host, port = host_port.split(":", 1)
-        print("PORT:", repr(port)) 
-        port = int(port)
-    else:  #if port is 80, its default and therefore doesnt incude it
-        host = host_port
-        port = 80
+    host, port = host_port.split(":", 1)
+    print("PORT:", repr(port)) 
+    port = int(port)
 
     # parse orignal headers into a string
     headersRelay = ""
