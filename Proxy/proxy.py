@@ -38,7 +38,12 @@ while True:
         proxyToServerSocket = socket(AF_INET, SOCK_STREAM)
         proxyToServerSocket.connect(("localhost", 8080))
         proxyToServerSocket.send(request.encode())
-        response = proxyToServerSocket.recv(1024)
+        response = b""
+        while True:
+            chunk = proxyToServerSocket.recv(1024)
+            if not chunk:
+                break
+            response += chunk
         proxyToServerSocket.close()
         # parse response from server to send to client
         responseText = response.decode()
