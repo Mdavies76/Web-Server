@@ -1,5 +1,6 @@
 from socket import *
 import os
+import threading
 from datetime import datetime, timezone
 
 SERVER_NAME = "CMPT_371"
@@ -8,11 +9,10 @@ TIME_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('localhost', SERVER_PORT))
-serverSocket.listen(1)
+serverSocket.listen(5)
 print("Server ready to receive")
 
-while True:
-    (clientSocket, addr) = serverSocket.accept()
+def handle_client(clientSocket):
     request = clientSocket.recv(1024).decode()
 
     lines = request.split("\r\n")
@@ -75,3 +75,7 @@ while True:
     clientSocket.send(header.encode())
     clientSocket.send(body)
     clientSocket.close()
+
+while True:
+    (clientSocket, addr) = serverSocket.accept()
+    threading.Thread(target=handle_client, args=(clientSocket,)).start()
