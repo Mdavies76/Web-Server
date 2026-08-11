@@ -74,10 +74,8 @@ while True:
     )
 
     clientSocket.send(header.encode())
-<<<<<<< Updated upstream
     clientSocket.send(body)
     clientSocket.close()
-=======
     i = 0
     while i < len(body):
         frame = body[i:i + FRAME_SIZE]
@@ -89,4 +87,3 @@ while True:
 while True:
     (clientSocket, addr) = serverSocket.accept()
     threading.Thread(target=handle_client, args=(clientSocket,)).start()
->>>>>>> Stashed changes
