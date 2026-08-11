@@ -6,6 +6,7 @@ from datetime import datetime, timezone
 SERVER_NAME = "CMPT_371"
 SERVER_PORT = 8080
 TIME_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
+FRAME_SIZE = 256
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('localhost', SERVER_PORT))
@@ -79,7 +80,6 @@ def handle_client(clientSocket):
         clientSocket.send(frame)
         i += FRAME_SIZE
         print(f"sending frame {i // FRAME_SIZE}: {len(frame)} bytes")
-    clientSocket.close()
     clientSocket.close()
 
 while True:
