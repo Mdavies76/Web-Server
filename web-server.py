@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 SERVER_NAME = "CMPT_371"
 SERVER_PORT = 8080
 TIME_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
+FRAME_SIZE = 256
 
 serverSocket = socket(AF_INET, SOCK_STREAM)
 serverSocket.bind(('localhost', SERVER_PORT))
@@ -73,5 +74,19 @@ while True:
     )
 
     clientSocket.send(header.encode())
+<<<<<<< Updated upstream
     clientSocket.send(body)
     clientSocket.close()
+=======
+    i = 0
+    while i < len(body):
+        frame = body[i:i + FRAME_SIZE]
+        clientSocket.send(frame)
+        i += FRAME_SIZE
+        print(f"sending frame {i // FRAME_SIZE}: {len(frame)} bytes")
+    clientSocket.close()
+
+while True:
+    (clientSocket, addr) = serverSocket.accept()
+    threading.Thread(target=handle_client, args=(clientSocket,)).start()
+>>>>>>> Stashed changes
