@@ -73,7 +73,13 @@ def handle_client(clientSocket):
     )
 
     clientSocket.send(header.encode())
-    clientSocket.send(body)
+    i = 0
+    while i < len(body):
+        frame = body[i:i + FRAME_SIZE]
+        clientSocket.send(frame)
+        i += FRAME_SIZE
+        print(f"sending frame {i // FRAME_SIZE}: {len(frame)} bytes")
+    clientSocket.close()
     clientSocket.close()
 
 while True:
