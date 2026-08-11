@@ -5,6 +5,7 @@ from datetime import datetime, timezone
 SERVER_NAME = "CMPT_371_PROXY"
 SERVER_PORT = 8888 # changed to 8888 because on mac it requires admin/root stuff
 TIME_FORMAT = "%a, %d %b %Y %H:%M:%S GMT"
+FRAME_SIZE = 256
 
 proxySocket = socket(AF_INET, SOCK_STREAM)
 proxySocket.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
@@ -63,8 +64,11 @@ while True:
         responseCode = "200 OK"
         body = open(filename, 'rb').read()
         header = "HTTP/1.1 " + responseCode + "\r\nLast-Modified: " + timeStamp + "\r\nContent-Type: text/html\r\n\r\n"
-        if responseCode == "200 OK":
-            body = open(filename, 'rb').read()
         clientSocket.send(header.encode())
-        clientSocket.send(body)
+        i = 0
+        while i < len(body):
+            frame = body[i:i + FRAME_SIZE]
+            clientSocket.send(frame)
+            i += FRAME_SIZE
+            print(f"sending frame {i // FRAME_SIZE}: {len(frame)} bytes")
         clientSocket.close()
